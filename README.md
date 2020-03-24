@@ -19,7 +19,7 @@ When the program finishes, it will display a banner indicating it has finished a
 dirwatcher takes several command-line arguments:
 
     dir --->    (required) directory to watch
-    ext --->    (required) file extension to filter on
+    ext --->    (required) file extension to filter on (example: txt)
     -poll ->    (optional) integer, in seconds, of how 
                 often the program should search.
                 This deaults to 1 second.

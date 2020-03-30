@@ -20,10 +20,10 @@ dirwatcher takes several command-line arguments:
 
     dir --->    (required) directory to watch
     ext --->    (required) file extension to filter on (example: txt)
+    magic ->    (required) the magic text (a string) to watch for
     -poll ->    (optional) integer, in seconds, of how 
                 often the program should search.
                 This deaults to 1 second.
-    magic ->    (required) the magic text (a string) to watch for
 
 
 From your terminal, type in the command:

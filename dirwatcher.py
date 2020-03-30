@@ -13,7 +13,7 @@ import signal
 
 
 # Global flag that triggers when SIGINT or SIGTERM occurs
-time_to_go = False
+exit_flag = False
 
 
 # We are going to use a dictionary of key=filename,
@@ -44,8 +44,8 @@ def signal_handler(sig_num, frame):
     a global flag so that the loop in main() will finish."""
 
     logger.warn(signal.Signals(sig_num).name + " signal received.")
-    global time_to_go
-    time_to_go = True
+    global exit_flag
+    exit_flag = True
 
 
 def create_parser():
@@ -132,8 +132,8 @@ def poll_directory(parsed_args):
     old_file_dict = {}
     directory = parsed_args.dir
 
-    # time_to_go is an exit flag triggered by SIGINT and SIGTERM
-    while not time_to_go:
+    # exit_flag is an exit flag triggered by SIGINT and SIGTERM
+    while not exit_flag:
 
         # if the directory to watch doesn't exist, squawk every polling cycle
         if not os.path.isdir(directory):
@@ -179,7 +179,7 @@ def main(args):
     # Every polling integer, check for changes in directory and log them.
     poll_directory(parsed_args)
 
-    # After time_to_go = True, gracefully exit program.
+    # After exit_flag = True, gracefully exit program.
     uptime = datetime.datetime.now() - app_start_time
     logger.info('\n'
                 '=========================================================\n'

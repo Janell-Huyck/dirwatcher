@@ -28,7 +28,7 @@ dirwatcher takes several command-line arguments:
 
 From your terminal, type in the command:
 
-         $python3 dirwatcher dir ext [-pol  seconds] magic
+         $python3 dirwatcher dir ext magic [-pol  seconds]
 
 ## Easy way to exit the program:
 

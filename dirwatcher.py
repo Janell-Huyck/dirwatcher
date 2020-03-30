@@ -39,10 +39,11 @@ logger.setLevel(logging.DEBUG)
 
 
 def signal_handler(sig_num, frame):
-    """ This handles SIGINT and SIGTERM signals sent to the program.  It changes
+    """ This handles SIGINT and SIGTERM signals
+    sent to the program and also any other signals.  It changes
     a global flag so that the loop in main() will finish."""
 
-    logger.info(signal.Signals(sig_num).name + "signal received.")
+    logger.warn(signal.Signals(sig_num).name + " signal received.")
     global time_to_go
     time_to_go = True
 

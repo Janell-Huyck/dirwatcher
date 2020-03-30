@@ -43,7 +43,7 @@ def signal_handler(sig_num, frame):
     sent to the program and also any other signals.  It changes
     a global flag so that the loop in main() will finish."""
 
-    logger.warn(signal.Signals(sig_num).name + " signal received.")
+    logger.warning(signal.Signals(sig_num).name + " signal received.")
     global exit_flag
     exit_flag = True
 
@@ -62,6 +62,12 @@ def create_parser():
     return parser
 
 
+def walk_error_handler(exception_instance):
+    """ Logs exceptions in the os.walk function. """
+
+    logger.warning(exception_instance)
+
+
 def check_files(old_file_dict, parsed_args):
     """ Search the current files in the specified directory and
     return a dictionary of them.  Compare old and new dictionaries and
@@ -76,7 +82,7 @@ def check_files(old_file_dict, parsed_args):
         extension = "." + extension
 
     # write all current files that have the extension to new_file_dict
-    walked_path = os.walk(parsed_args.dir)
+    walked_path = os.walk(parsed_args.dir, onerror=walk_error_handler)
     for dirpath, dirs, files in walked_path:
         for file_name in files:
             f_name, file_extension = os.path.splitext(
@@ -86,15 +92,22 @@ def check_files(old_file_dict, parsed_args):
             if len(file_name) > 0:
                 new_file_dict[os.path.join(dirpath, file_name)] = 0
 
-    # compare new and old dictionaries and look for changes
-    for key, value in new_file_dict.items():
-        if key not in old_file_dict:
-            logger.info("New file found: " + key)
-        else:
-            new_file_dict[key] = old_file_dict[key]
-    for key, value in old_file_dict.items():
-        if key not in new_file_dict:
-            logger.info("File deleted: " + key)
+    # Compare new and old dictionaries and look for changes
+    new_files_found = [
+        file for file in new_file_dict.keys() - old_file_dict.keys()]
+    files_lost = [
+        file for file in old_file_dict.keys() - new_file_dict.keys()]
+
+    # Assign either old line reading place or 0 to values in new_file_dict
+    for new_file in new_file_dict:
+        new_file_dict[new_file] = old_file_dict.get(
+            new_file) if new_file in old_file_dict.keys() else 0
+
+    # Log the results
+    if new_files_found:
+        logger.info("New file(s) found: " + str(new_files_found))
+    if files_lost:
+        logger.info("File(s) removed: " + str(files_lost))
 
     return new_file_dict
 
@@ -106,9 +119,9 @@ def look_for_magic(file_dict, magic):
     for key, value in file_dict.items():
 
         # make a list of all the unread lines in each file
-        with open(key) as fp:
+        with open(key) as f:
             unread_lines = [[i+1, line]
-                            for i, line in enumerate(fp) if i >= value]
+                            for i, line in enumerate(f) if i >= value]
 
             # check each unread line for magic string
             if not unread_lines:
@@ -130,16 +143,9 @@ def poll_directory(parsed_args):
     changes in the watched directory."""
 
     old_file_dict = {}
-    directory = parsed_args.dir
 
     # exit_flag is an exit flag triggered by SIGINT and SIGTERM
     while not exit_flag:
-
-        # if the directory to watch doesn't exist, squawk every polling cycle
-        if not os.path.isdir(directory):
-            logger.info(directory + " is not a directory.")
-            time.sleep((int(parsed_args.poll)))
-            continue
 
         # check for new or deleted files
         old_file_dict = check_files(

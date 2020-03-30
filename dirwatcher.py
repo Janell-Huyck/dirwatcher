@@ -1,7 +1,8 @@
 #! usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-__author__ = "Janell.Huyck with help on signals from madarp"
+__author__ = """Janell.Huyck with help on signals
+and logger formatting from madarp"""
 
 import sys
 import argparse

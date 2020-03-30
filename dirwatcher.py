@@ -16,14 +16,6 @@ import signal
 exit_flag = False
 
 
-# We are going to use a dictionary of key=filename,
-# value=[Boolean-has-been-announced, last-line-checked]
-# filename = "filename"
-# announced = False
-# last_line = 0
-# previous_files = {filename: [announced, last_line]}
-
-
 # Make sure that the user is running this program in python3
 if sys.version_info[0] < 3:
     raise Exception("This program requires python 3 to work.")

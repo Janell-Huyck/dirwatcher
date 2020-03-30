@@ -8,7 +8,7 @@ This project is a long-running program designed to keep track of what is happeni
 
 The program will log a message to the terminal once for any of those events.  Files in the monitored directory may be added or deleted or appended at any time by other processes.  It will only scan new text that is added on to the end of text files, rather than watching for changes in the middle of the files.  If the "magic" string is found, it will indicate the file name and the line # that it found the string on.
 
-If the directory to be watched does not exist, it will merely log a notice that it does not exist, and will continue to log that notice every second until the watched directory is created.
+If the directory to be watched does not exist, it will merely log a notice that it does not exist, and will continue to log that notice every polling interval until the watched directory is created.
 
 When the program starts, it will display a banner indicating it is starting.
 When the program finishes, it will display a banner indicating it has finished and the total amount of time that was spent running.  If the program is stopped via SIGTERM or SIGINT, it will exit gracefully, displaying the banner.

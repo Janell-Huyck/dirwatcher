@@ -1,4 +1,5 @@
 # dirwatcher
+[![Build Status](https://dev.azure.com/janell-huyck/dirwatcher/_apis/build/status/Janell-Huyck.dirwatcher?branchName=master)](https://dev.azure.com/janell-huyck/dirwatcher/_build/latest?definitionId=1&branchName=master)
 
 This project is a long-running program designed to keep track of what is happening in a specific directory.  Once a second, the program will check the directory for:
 
